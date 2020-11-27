@@ -53,7 +53,32 @@ _Disclaimer_ For security reasons the default shared folder is `/dev/null`.
 
 ## Instalation
 
-TBA
+### Library
+
+StaticServer is distributed using the [Swift Package Manager](https://swift.org/package-manager).
+To use the library just add it to your `Package.swift`:
+
+```swift
+let package = Package(
+    ...
+    dependencies: [
+        .package(url: "https://github.com/Mastermakrela/Static-Server.git", from: "0.0.1")
+    ],
+    ...
+)
+```
+
+Then don't forget to import it:
+
+```swift
+
+import StaticServer
+
+```
+
+### CLI
+
+If you just want the CLI tool, clone this repository, build the StaticServerCLI and copy it to your `/user/local/bin/`.
 
 ## Licence
 
