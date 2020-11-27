@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="author" content="mastermakrela" />
+
+        <title>Example Static Server</title>
+
+        <link href="style.css" rel="stylesheet" />
+        <script src="script.js"></script>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <h1>Welcome to the example page of Static Server</h1>
+
+        <div>
+            <h2>Images work</h2>
+            <img src="haudi.png" width="200px" />
+        </div>
+
+        <div>
+            <h2>JavaScript works</h2>
+
+            <p>
+                <button onclick="exampleFunction()">Click Me!</button>
+            </p>
+            <p>Check output in console :)</p>
+        </div>
+
+        <div>
+            <h2>Directories work as expected</h2>
+            (not specifying file serves to <em>index.html</em>)
+
+            <p>
+                <a href="subdirectory">subdirectory</a>
+            </p>
+            <p>
+                <a href="subdirectory/index.html">subdirectory/index.html</a>
+            </p>
+        </div>
+    </body>
+</html>
