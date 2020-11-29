@@ -19,6 +19,7 @@ public final class StaticServer {
     private let host: String
     private let port: Int
     private let root: String
+    private let silent: Bool
 
     private let group = MultiThreadedEventLoopGroup(numberOfThreads: System.coreCount)
     private let threadPool = NIOThreadPool(numberOfThreads: 6)
@@ -28,7 +29,7 @@ public final class StaticServer {
 
     // MARK: - Initializer
 
-    public init(host: String = "::", port: Int = 8888, root: String = "/dev/null") throws {
+    public init(host: String = "::", port: Int = 8888, root: String = "/dev/null", silent: Bool = false) throws {
         if !FileManager.default.fileExists(atPath: root) {
             throw ServerError.ServerRootDoesntExist
         }
@@ -36,6 +37,7 @@ public final class StaticServer {
         self.host = host
         self.port = port
         self.root = root
+        self.silent = silent
 
         threadPool.start()
     }
@@ -78,7 +80,7 @@ public final class StaticServer {
         guard fileIO != nil else { throw ServerError.FileIOMissing }
         guard let socketBootstrap = socketBootstrap else { throw ServerError.ServerBootstrapmissing }
 
-        print("Server root folder: \(root)")
+        if !silent { print("Server root folder: \(root)") }
 
         let channel = try socketBootstrap.bind(host: host, port: port).wait()
 
@@ -86,11 +88,11 @@ public final class StaticServer {
             fatalError("Address was unable to bind. Please check that the socket was not closed or that the address family was understood.")
         }
 
-        print("Server started and listening on \(channelLocalAddress), serving files from \(root)")
+        if !silent { print("Server started and listening on \(channelLocalAddress), serving files from \(root)") }
 
         try channel.closeFuture.wait()
 
-        print("Server closed")
+        if !silent { print("Server closed") }
     }
 
     public func stop() {
