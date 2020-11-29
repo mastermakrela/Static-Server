@@ -41,11 +41,9 @@ Basic command line tool that uses StaticSrver library to serve files.
 ### Usage
 
 ```zsh
-StaticServerCLI [--port <port>] [--host <host>] [--server-root <server-root>]
-StaticServerCLI [-p <port>] [-h <host>] [-s <server-root>]
+static-server [--port <port>] [--host <host>] [--server-root <server-root>]
+static-server [-p <port>] [-h <host>] [-s <server-root>]
 ```
-
-After cloning and building it's helpful to copy `StaticServerCLI` to `/usr/local/bin` for direct acces in any directory.
 
 For full help use `StaticServerCLI --help`.
 
@@ -78,11 +76,21 @@ import StaticServer
 
 ### CLI
 
-If you just want the CLI tool, clone this repository, build the StaticServerCLI and copy it to your `/user/local/bin/`.
+If you just want the CLI tool, clone this repository and run the `Makefile`.
+
+The executable will be added to your `/user/local/bin/` and then you can use it anywhere on your mashine.
+
+```swift
+git clone https://github.com/Mastermakrela/Static-Server.git
+cd StaticServer
+make
+```
+
+
 
 ## Licence
 
-See LICENCE.md file.
+See [LICENCE.md](https://github.com/Mastermakrela/Static-Server/blob/main/LICENSE.md) file.
 
 ## Inspiration and Credits
 
