@@ -10,7 +10,7 @@ import NIO
 import NIOHTTP1
 
 public enum ServerError: Error {
-    case ServerRootDoesntExist
+    case ServerRootDoesNotExist
     case FileIOMissing
     case ServerBootstrapMissing
     case AddressAlreadyInUse
@@ -32,7 +32,7 @@ public final class StaticServer {
 
     public init(host: String = "::", port: Int = 8888, root: String = "/dev/null", silent: Bool = false) throws {
         if !FileManager.default.fileExists(atPath: root) {
-            throw ServerError.ServerRootDoesntExist
+            throw ServerError.ServerRootDoesNotExist
         }
 
         self.host = host
