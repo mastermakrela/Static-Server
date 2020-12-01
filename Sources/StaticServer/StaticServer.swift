@@ -9,10 +9,11 @@ import Foundation
 import NIO
 import NIOHTTP1
 
-enum ServerError: Error {
+public enum ServerError: Error {
     case ServerRootDoesntExist
     case FileIOMissing
-    case ServerBootstrapmissing
+    case ServerBootstrapMissing
+    case AddressAlreadyInUse
 }
 
 public final class StaticServer {
@@ -78,19 +79,26 @@ public final class StaticServer {
         try prepareBootstrap()
 
         guard fileIO != nil else { throw ServerError.FileIOMissing }
-        guard let socketBootstrap = socketBootstrap else { throw ServerError.ServerBootstrapmissing }
+        guard let socketBootstrap = socketBootstrap else { throw ServerError.ServerBootstrapMissing }
 
         if !silent { print("Server root folder: \(root)") }
 
-        let channel = try socketBootstrap.bind(host: host, port: port).wait()
+        do {
+            let channel = try socketBootstrap.bind(host: host, port: port).wait()
 
-        guard let channelLocalAddress = channel.localAddress else {
-            fatalError("Address was unable to bind. Please check that the socket was not closed or that the address family was understood.")
+            guard let channelLocalAddress = channel.localAddress else {
+                throw NIO.IOError(errnoCode: 48, reason: "Address was unable to bind. Please check that the socket was not closed or that the address family was understood.")
+            }
+
+            if !silent { print("Server started and listening on \(channelLocalAddress), serving files from \(root)") }
+
+            try channel.closeFuture.wait()
+
+        } catch let error as NIO.IOError where error.errnoCode == 48 {
+            throw ServerError.AddressAlreadyInUse
+        } catch {
+            throw error
         }
-
-        if !silent { print("Server started and listening on \(channelLocalAddress), serving files from \(root)") }
-
-        try channel.closeFuture.wait()
 
         if !silent { print("Server closed") }
     }
