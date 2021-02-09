@@ -117,7 +117,7 @@ final class HTTPHandler: ChannelInboundHandler {
                 return
             }
 
-            var path = htdocsPath + path
+            var path = htdocsPath + (path.removingPercentEncoding ?? "")
             var isDir: ObjCBool = false
 
             guard FileManager.default.fileExists(atPath: path, isDirectory: &isDir) else {
