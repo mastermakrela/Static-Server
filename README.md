@@ -41,8 +41,8 @@ Basic command line tool that uses StaticSrver library to serve files.
 ### Usage
 
 ```zsh
-static-server [--port <port>] [--host <host>] [--server-root <server-root>]
-static-server [-p <port>] [-h <host>] [-s <server-root>]
+static-server [--port <port>] [--host <host>] [--server-root <server-root>] [--spa]
+static-server [-p <port>] [-h <host>] [-s <server-root>] [--spa]
 ```
 
 For full help use `StaticServerCLI --help`.
@@ -85,8 +85,6 @@ git clone https://github.com/Mastermakrela/Static-Server.git
 cd StaticServer
 make
 ```
-
-
 
 ## Licence
 

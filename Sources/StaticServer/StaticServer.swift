@@ -21,6 +21,7 @@ public final class StaticServer {
     private let port: Int
     private let root: String
     private let silent: Bool
+    private let spa: Bool
 
     private let group = MultiThreadedEventLoopGroup(numberOfThreads: System.coreCount)
     private let threadPool = NIOThreadPool(numberOfThreads: 6)
@@ -30,7 +31,7 @@ public final class StaticServer {
 
     // MARK: - Initializer
 
-    public init(host: String = "::", port: Int = 8888, root: String = "/dev/null", silent: Bool = false) throws {
+    public init(host: String = "::", port: Int = 8888, root: String = "/dev/null", silent: Bool = false, spa: Bool = false) throws {
         if !FileManager.default.fileExists(atPath: root) {
             throw ServerError.ServerRootDoesNotExist
         }
@@ -39,6 +40,7 @@ public final class StaticServer {
         self.port = port
         self.root = root
         self.silent = silent
+        self.spa = spa
 
         threadPool.start()
     }
@@ -55,7 +57,7 @@ public final class StaticServer {
 
         func childChannelInitializer(channel: Channel) -> EventLoopFuture<Void> {
             channel.pipeline.configureHTTPServerPipeline(withErrorHandling: true).flatMap {
-                channel.pipeline.addHandler(HTTPHandler(fileIO: fileIO, htdocsPath: self.root))
+                channel.pipeline.addHandler(HTTPHandler(fileIO: fileIO, htdocsPath: self.root, spa: self.spa))
             }
         }
 

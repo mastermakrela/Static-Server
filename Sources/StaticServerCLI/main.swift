@@ -17,9 +17,12 @@ struct StaticServerCLI: ParsableCommand {
 
     @Option(name: .shortAndLong, help: "Directory which should be served")
     var serverRoot: String = "/dev/null"
-
+    
+    @Flag(name: .customLong("spa"), help: "Run SPA mode")
+    var singlePageApp = false
+    
     func run() throws {
-        let server = try StaticServer(host: host, port: port, root: serverRoot)
+        let server = try StaticServer(host: host, port: port, root: serverRoot, spa: singlePageApp)
 
         try server.start()
     }

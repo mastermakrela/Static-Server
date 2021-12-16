@@ -63,10 +63,12 @@ final class HTTPHandler: ChannelInboundHandler {
     private var handler: ((ChannelHandlerContext, HTTPServerRequestPart) -> Void)?
     private let fileIO: NonBlockingFileIO
     private let htdocsPath: String
+    private let spa: Bool
 
-    public init(fileIO: NonBlockingFileIO, htdocsPath: String) {
+    public init(fileIO: NonBlockingFileIO, htdocsPath: String, spa: Bool = false) {
         self.htdocsPath = htdocsPath.hasSuffix("/") ? htdocsPath : "\(htdocsPath)/"
         self.fileIO = fileIO
+        self.spa = spa
     }
 
     private func handleFile(context: ChannelHandlerContext, request: HTTPServerRequestPart, path: String) {
@@ -119,13 +121,16 @@ final class HTTPHandler: ChannelInboundHandler {
 
             var path = htdocsPath + (path.removingPercentEncoding ?? "")
             var isDir: ObjCBool = false
+            let exists = FileManager.default.fileExists(atPath: path, isDirectory: &isDir)
 
-            guard FileManager.default.fileExists(atPath: path, isDirectory: &isDir) else {
+            if !spa && !exists {
                 sendErrorResponse(request: request, IOError(errnoCode: ENOENT, reason: "not found"))
                 return
             }
 
             if isDir.boolValue { path += "/index.html" }
+            
+            if spa && (path.hasSuffix(".html") || !exists) { path = "\(htdocsPath)index.html" }
 
             let fileExtension = path.components(separatedBy: ".").last
             let fileMediaType = HTTPMediaType.fileExtension(fileExtension ?? "txt") ?? .plainText
